@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090414">
+<title>FOR IMA ♥</title>
+<style>
+:root{color-scheme:dark;--purple:#ae54ff;--violet:#7c3cff;--green:#39ff88;--yellow:#ffdb52;--red:#ff4668}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;overflow-x:hidden}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff;background:#090414;min-height:100dvh;display:grid;place-items:center;padding:82px 16px 30px;isolation:isolate}
+.ambient{position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse 60% 50% at 18% 22%,#7922b94d,transparent 75%),radial-gradient(ellipse 60% 60% at 85% 78%,#4416b05a,transparent 75%),#090414}
+.ambient:after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 20%,#9c42ff0d 50%,transparent 80%);animation:aurora 9s ease-in-out infinite alternate}
+@keyframes aurora{to{opacity:.35;transform:translateX(6%)}}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#rain{z-index:40;opacity:0;transition:opacity .5s;display:block;visibility:visible;mix-blend-mode:screen}
+body.sad #rain{opacity:1}
+#rainOverlay{position:fixed;inset:0;z-index:42;overflow:hidden;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;background:linear-gradient(180deg,#080b1460,#07091224)}
+body.sad #rainOverlay{opacity:1;visibility:visible}
+.raindrop{position:absolute;top:-130px;width:2px;height:var(--length);left:var(--left);background:linear-gradient(to bottom,transparent 0%,#a8c9e6aa 20%,#f5faff 100%);box-shadow:0 0 4px #dcecffb0;transform:rotate(12deg);animation:rainFall var(--duration) linear infinite;animation-delay:var(--delay);opacity:var(--opacity)}
+@keyframes rainFall{from{translate:0 -120px}to{translate:-18vw calc(100vh + 300px)}}
+#rainOverlay:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(103deg,transparent 0px,transparent 72px,#d4e7ff16 73px,transparent 75px);animation:rainSheets .55s linear infinite;pointer-events:none}
+@keyframes rainSheets{to{background-position:-40px 140px}}
+#effects{z-index:45}
+#flash{position:fixed;inset:0;z-index:46;background:#c9a1ff;pointer-events:none;opacity:0}
+#flash.active{animation:flash .7s ease-out}
+@keyframes flash{0%{opacity:.7}100%{opacity:0}}
+.shell{position:relative;z-index:5;width:min(800px,100%);padding:clamp(25px,5.5vw,55px) clamp(18px,5vw,52px);text-align:center;border:1px solid #ac62ff70;border-radius:30px;background:linear-gradient(145deg,#1c1034f5,#100b24f7);box-shadow:0 24px 100px #000b,0 0 80px #8d35ff2b,inset 0 0 35px #9a46ff0a;transition:background .5s,border-color .5s;overflow:visible}
+.shell:before{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;border:1px solid #c783ff65;box-shadow:inset 0 0 18px #a044ff24;animation:electricGlow 2s ease-in-out infinite alternate}
+@keyframes electricGlow{to{border-color:#e6b6ff;box-shadow:inset 0 0 30px #a044ff50,0 0 40px #9e48ff55}}
+.eyebrow{font-size:clamp(10px,2.5vw,12px);font-weight:850;letter-spacing:.17em;text-transform:uppercase;color:#dcb8ff;margin-bottom:22px;overflow-wrap:anywhere}
+.title{font-size:clamp(26px,5.1vw,47px);font-weight:900;line-height:1.24;letter-spacing:-.035em;margin:0 0 28px;overflow-wrap:break-word;background:linear-gradient(110deg,#fff 10%,#dfb5ff 50%,#ae76ff 90%);background-clip:text;-webkit-background-clip:text;color:transparent;padding:3px 0 6px}
+.units{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(6px,1.8vw,14px);margin:20px 0 30px}
+.unit{min-width:0;padding:clamp(13px,2.5vw,22px) 3px;border:1px solid #ab6dff48;border-radius:17px;background:linear-gradient(145deg,#7e40d820,#a348ff09);box-shadow:inset 0 0 20px #a74cff12}
+.digit{display:block;font-size:clamp(26px,6.7vw,59px);font-weight:900;line-height:1.22;font-variant-numeric:tabular-nums;letter-spacing:-.045em;text-shadow:0 0 22px #ae54ff77}
+.unit small{display:block;font-size:clamp(9px,1.8vw,11px);color:#c9b2e8;text-transform:uppercase;letter-spacing:.08em;margin-top:8px}
+.track{height:16px;background:#ffffff13;border:1px solid #bb82ff45;border-radius:99px;overflow:hidden;box-shadow:inset 0 0 12px #0009,0 0 14px #8f3cff2c}
+.fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#6f2bff,#b755ff,#f0c3ff,#a342ff);background-size:200% 100%;box-shadow:0 0 26px #b653ff;animation:flow 1.5s linear infinite;transition:width .12s linear}
+@keyframes flow{to{background-position:200% 0}}
+.progress-label{display:flex;justify-content:space-between;gap:10px;margin-top:13px;font-size:clamp(10px,1.8vw,12px);color:#c4acd9}
+#percent{white-space:nowrap}
+/* Entire card shakes as one element. JS drives this every frame for a smooth ramp. */
+#shell.countdown-shake{will-change:transform;transform-origin:center center}
+#shell.countdown-shake .unit{box-shadow:0 0 22px #a34dff9c,inset 0 0 24px #9d4aff35}
+.question{font-size:clamp(29px,6.7vw,62px);line-height:1.17;font-weight:950;letter-spacing:-.045em;overflow-wrap:break-word;margin:10px 0 32px;padding:4px 0;text-shadow:0 0 38px #ae55ff9e}
+.buttons{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:20px}
+.btn{position:relative;isolation:isolate;min-width:120px;padding:17px 24px;border:0;border-radius:15px;font:900 18px inherit;font-family:inherit;font-size:18px;font-weight:900;cursor:pointer;touch-action:manipulation;transition:transform .2s,box-shadow .2s,opacity .2s}
+.btn:hover:not(:disabled){transform:translateY(-4px) scale(1.04)}
+.btn:active:not(:disabled){transform:scale(.96)}
+.yes{background:var(--green);color:#052610;box-shadow:0 0 30px #39ff8877}
+.maybe{background:var(--yellow);color:#362400;box-shadow:0 0 25px #ffdb5233}
+.no{background:var(--red);color:#fff;box-shadow:0 0 25px #ff466833}
+.btn:disabled{cursor:not-allowed;filter:grayscale(1);opacity:.48;box-shadow:none}
+.big-yes{font-size:clamp(24px,5vw,35px);padding:24px 62px;min-width:210px;box-shadow:0 0 60px #39ff88a0}
+.small-btn{font-size:13px;min-width:80px;padding:12px 15px}
+/* Tooltip is a sibling, not a child of the disabled button. */
+.maybe-wrap{position:relative;display:inline-flex}
+.bubble{position:absolute;z-index:30;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%);width:min(230px,75vw);padding:13px 15px;border-radius:13px;border:1px solid #ffe47d;background:#21132f;color:#fff;box-shadow:0 14px 40px #000e,0 0 25px #ffc94d55;font-size:13px;font-weight:800;line-height:1.4;opacity:1;animation:bubbleIn .35s both;pointer-events:none}
+.bubble:after{content:"";position:absolute;top:100%;left:calc(50% - 7px);border:7px solid transparent;border-top-color:#ffe47d}
+@keyframes bubbleIn{from{opacity:0;transform:translate(-50%,12px) scale(.85)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+.sad-title{font-size:clamp(32px,7vw,65px);line-height:1.2;margin:8px 0 30px;overflow-wrap:break-word}
+body.sad .ambient{filter:grayscale(1);opacity:.35}
+body.sad .shell{background:#17171ff7;border-color:#666;box-shadow:0 20px 90px #000c}
+body.sad .shell:before{animation:none;border-color:#777;box-shadow:none}
+body.sad .shell>*{filter:grayscale(1)}
+.form-wrap{text-align:left;max-width:630px;margin:auto}
+.form-wrap h2{text-align:center;font-size:clamp(22px,4.4vw,35px);line-height:1.35;overflow-wrap:break-word;margin:12px 0 25px}
+.form-wrap label{display:block;font-weight:750;margin:16px 0 10px}
+textarea{width:100%;min-height:210px;resize:vertical;background:#100b20;color:#fff;border:2px solid #ad69ff77;border-radius:16px;outline:none;padding:18px;font:16px/1.6 inherit;font-family:inherit;font-size:16px;line-height:1.6;transition:border-color .2s,box-shadow .2s}
+textarea:focus{border-color:#d39cff;box-shadow:0 0 0 4px #ad69ff26}
+textarea.invalid{border-color:#ff4668;box-shadow:0 0 20px #ff46682c}
+.form-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:10px 0 18px;color:#d0bfe5;font-size:13px}
+.bad{color:#ff8296}
+.form-wrap .btn{width:100%}
+#submitBtn:not(:disabled){background:#39ff88!important;color:#052610!important;box-shadow:0 0 30px #39ff8870!important;opacity:1!important}
+#submitBtn:disabled{background:#a32d46!important;color:#ffe3e8!important;opacity:.75!important}
+#questionScreen.return-mode .buttons{align-items:center}
+#questionScreen.return-mode .small-btn{font-size:12px!important;min-width:65px!important;padding:8px 11px!important;height:34px!important;align-self:center!important}
+#questionScreen.return-mode .big-yes{height:auto;min-height:78px;font-size:32px;padding:23px 54px}
+#finalModal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:20px;background:#070310ad;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
+#finalModal .modal-card{width:min(490px,100%);padding:clamp(25px,5vw,42px);border:1px solid #df8aff;border-radius:25px;background:#211132;box-shadow:0 0 100px #b54cff80,0 30px 100px #000e;text-align:center;animation:modalEnter .5s cubic-bezier(.2,1.4,.4,1) both}
+#finalModal h2{font-size:clamp(25px,5vw,37px);margin:0 0 16px;color:#ffc4e5}
+#finalModal p{line-height:1.6;color:#f3e4ff;margin:0 0 24px}
+#modalReturn{width:100%;min-height:58px}
+@keyframes modalEnter{from{opacity:0;transform:translateY(25px) scale(.86)}to{opacity:1;transform:translateY(0) scale(1)}}
+.btn.locked{background:#a32d46;color:#ffe3e8;box-shadow:none;opacity:.75}
+.notice{margin-top:18px;padding:16px;border:1px solid #ff657e;border-radius:14px;background:#431a30;color:#ffd5df;text-align:center;line-height:1.5}
+.hidden{display:none!important}
+.success-title{font-size:clamp(33px,7vw,70px);line-height:1.22;overflow-wrap:break-word;margin:12px 0 18px;color:#edc7ff;text-shadow:0 0 40px #ae55ff}
+.success-heart{display:inline-block;transform-origin:center;animation:heartBeat 2.6s ease-in-out infinite!important;font-size:clamp(65px,13vw,110px);margin:20px 0;filter:drop-shadow(0 0 22px #d469ff);}
+@keyframes heartBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.42)}}
+@keyframes heartGlow{to{filter:drop-shadow(0 0 42px #eaa0ff)}}
+body.party .shell{animation:partyGlow 2.6s ease-in-out infinite alternate,celebrationFloat 6.5s ease-in-out infinite;will-change:transform}
+body.party .ambient{animation:celebrationBackdrop 12s ease-in-out infinite alternate;transform-origin:center}
+body.party #celebration{animation:celebrationDrift 11s ease-in-out infinite alternate}
+@keyframes celebrationFloat{0%,100%{transform:translate3d(-14px,4px,0) rotate(-1.3deg)}25%{transform:translate3d(11px,-19px,0) rotate(1.15deg)}50%{transform:translate3d(20px,8px,0) rotate(.9deg)}75%{transform:translate3d(-9px,18px,0) rotate(-1.1deg)}}
+@keyframes celebrationBackdrop{from{transform:scale(1.035) translate(-.6%,-.5%)}to{transform:scale(1.07) translate(.7%,.6%)}}
+@keyframes celebrationDrift{from{transform:translate(-.4%,-.3%)}to{transform:translate(.4%,.3%)}}
+@keyframes partyGlow{0%{border-color:#bb70ff;box-shadow:0 0 80px #9b42ff88}50%{border-color:#39ff88;box-shadow:0 0 100px #39ff8866}100%{border-color:#ff7ad9;box-shadow:0 0 100px #ff7ad977}}
+@media(max-width:450px){body{padding:78px 12px 20px}.shell{border-radius:23px}.buttons{gap:9px}.btn{min-width:85px;padding:15px 17px;font-size:16px}.progress-label{font-size:10px}.eyebrow{letter-spacing:.1em}.big-yes{min-width:175px;padding:20px 35px}}
+@media(prefers-reduced-motion:reduce){.ambient:after,.fill{animation:none!important}*,*:before,*:after{scroll-behavior:auto!important}}
+
+.required-count{font-weight:950;color:#fff;font-size:1.25em;text-shadow:0 0 18px #dba3ff}
+#celebration{position:fixed;inset:0;z-index:70;pointer-events:none;overflow:hidden;display:none}
+body.party #celebration{display:block}
+.firework-spark{position:absolute;left:var(--x);top:var(--y);width:var(--size);height:var(--size);border-radius:50%;background:var(--color);box-shadow:0 0 16px 4px var(--color),0 0 38px 5px var(--color);animation:fireworkFly var(--duration) cubic-bezier(.15,.55,.35,1) forwards;will-change:transform,opacity}
+@keyframes fireworkFly{0%{transform:translate(0,0) scale(.4);opacity:1}65%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.15);opacity:0}}
+.party-confetti{position:absolute;top:-8vh;left:var(--x);width:var(--w);height:var(--h);background:var(--color);box-shadow:0 0 8px var(--color);animation:confettiDrop var(--duration) linear forwards;will-change:transform}
+@keyframes confettiDrop{to{transform:translate(var(--drift),115vh) rotate(var(--spin));opacity:.05}}
+body.party .success-heart{animation:heartBeat 2.6s ease-in-out infinite!important}
+.falling-heart{position:absolute;top:-12vh;left:var(--x);font-size:var(--size);line-height:1;filter:drop-shadow(0 0 9px #ff79d8);opacity:var(--opacity);animation:heartFall var(--duration) linear forwards;will-change:transform,opacity;transform-origin:center}
+@keyframes heartFall{0%{transform:translate3d(0,-5vh,0) rotate(var(--start-rot)) scale(.9)}25%{transform:translate3d(calc(var(--drift) * .25 + var(--sway)),28vh,0) rotate(calc(var(--start-rot) + var(--twist) * .25)) scale(1)}50%{transform:translate3d(calc(var(--drift) * .5 - var(--sway)),58vh,0) rotate(calc(var(--start-rot) + var(--twist) * .5)) scale(.95)}75%{transform:translate3d(calc(var(--drift) * .75 + var(--sway)),88vh,0) rotate(calc(var(--start-rot) + var(--twist) * .75)) scale(1)}100%{transform:translate3d(var(--drift),125vh,0) rotate(calc(var(--start-rot) + var(--twist))) scale(.9);opacity:.15}}
+</style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div id="rainOverlay" aria-hidden="true"></div>
+<canvas id="effects" aria-hidden="true"></canvas>
+<div id="celebration" aria-hidden="true"></div>
+<div id="flash" aria-hidden="true"></div>
+<main class="shell" id="shell">
+<section id="countdownScreen">
+<div class="eyebrow">✦ A moment worth waiting for ✦</div>
+<h1 class="title">i ask ima to be my girlfriend in:</h1>
+<div class="units">
+<div class="unit"><span class="digit" id="days">00</span><small>Days</small></div>
+<div class="unit"><span class="digit" id="hours">00</span><small>Hours</small></div>
+<div class="unit"><span class="digit" id="minutes">00</span><small>Minutes</small></div>
+<div class="unit"><span class="digit" id="seconds">00</span><small>Seconds</small></div>
+</div>
+<div class="track" role="progressbar" aria-label="Countdown progress" aria-valuemin="0" aria-valuemax="100" id="progressTrack"><div class="fill" id="progress"></div></div>
+<div class="progress-label"><span id="progressText">The anticipation is building...</span><span id="percent">0%</span></div>
+</section>
+<section id="questionScreen" class="hidden">
+<div class="eyebrow">✦ The moment is here ✦</div>
+<h1 class="question">WILL YOU BE MY GIRLFRIEND? ♥</h1>
+<div class="buttons">
+<button class="btn yes" id="yesBtn">YES ❤️</button>
+<div class="maybe-wrap"><button class="btn maybe" id="maybeBtn">MAYBE ❓</button><div id="maybeBubble" class="bubble hidden" role="status">Sorry, please choose another option</div></div>
+<button class="btn no" id="noBtn">NO 🥀</button>
+</div>
+</section>
+<section id="sureScreen" class="hidden">
+<div class="eyebrow">✦ Wait a second ✦</div>
+<h1 class="sad-title">...are you sure?</h1>
+<div class="buttons"><button class="btn yes" id="sureYes">YES</button><button class="btn no" id="sureNo">NO</button></div>
+</section>
+<section id="formScreen" class="hidden">
+<div class="form-wrap">
+<div class="eyebrow" style="text-align:center">✦ An extremely important form ✦</div>
+<h2>please fill out this form with reasons why you think jordan would be a bad boyfriend/not compatible with you</h2>
+<label for="reasons">Your explanation</label>
+<textarea id="reasons" class="invalid" placeholder="Please explain your reasoning in detail..."></textarea>
+<div class="form-meta"><span id="countLabel">0 / 100 characters</span><span id="formHint" class="bad">100 more required</span></div>
+<button id="submitBtn" class="btn locked" disabled>Submit explanation</button>
+<div id="formError" class="notice hidden" role="alert"></div>
+<button id="returnBtn" class="btn yes hidden" style="margin-top:16px">Go back to the question ♥</button>
+</div>
+</section>
+<section id="successScreen" class="hidden">
+<div class="eyebrow">✦ Best answer ever ✦</div>
+<h1 class="success-title">SHE SAID YES! 💖</h1>
+<p>You just made me the happiest person alive ♥</p>
+<div class="success-heart">💗</div>
+</section>
+</main>
+<div id="finalModal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-card"><h2 id="modalTitle">ERROR 212</h2><p id="modalMessage">The system refuses to believe Jordan is a bad match. Your explanation could not be submitted.</p><button id="modalReturn" class="btn yes">Go back to the start</button></div></div>
+<audio id="song" src="song.mp3" preload="auto" loop></audio>
+<audio id="song2" src="song2.mp3" preload="auto" loop></audio>
+<script>
+(()=>{'use strict';
+const TARGET=Date.parse('2026-11-22T00:00:00-06:00');
+const START=Date.parse('2026-11-16T00:00:00-06:00');
+let activeTarget=TARGET,activeStart=START,finished=false,party=false,sad=false,maybeDisabled=false,stage=0,formFinished=false;
+const requirements=[100,250,500,1000,1000000];
+const $=id=>document.getElementById(id);
+const screens=['countdownScreen','questionScreen','sureScreen','formScreen','successScreen'];
+const effects=$('effects'),rain=$('rain'),fx=effects.getContext('2d'),rx=rain.getContext('2d');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rainOverlay=$('rainOverlay');
+for(let i=0;i<260;i++){const drop=document.createElement('i');drop.className='raindrop';drop.style.setProperty('--left',(Math.random()*125)+'%');drop.style.setProperty('--length',(25+Math.random()*95)+'px');drop.style.setProperty('--duration',(.42+Math.random()*.8)+'s');drop.style.setProperty('--delay',(-Math.random()*2)+'s');drop.style.setProperty('--opacity',(.45+Math.random()*.55));rainOverlay.appendChild(drop)}
+let W=innerWidth,H=innerHeight,dpr=1,particles=[],drops=[],last=0,fireworkUntil=0,nextBurst=0;
+function resize(){W=innerWidth;H=innerHeight;dpr=Math.min(devicePixelRatio||1,2);for(const [canvas,ctx] of [[effects,fx],[rain,rx]]){canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}const density=Math.min(900,Math.max(180,Math.floor(W*H/1200)));drops=Array.from({length:density},()=>({x:Math.random()*W,y:Math.random()*H,len:15+Math.random()*35,speed:520+Math.random()*850,alpha:.4+Math.random()*.55,width:.7+Math.random()*1.2}))}
+addEventListener('resize',resize,{passive:true});resize();
+function show(id){screens.forEach(s=>$(s).classList.toggle('hidden',s!==id));$('shell').classList.toggle('success',id==='successScreen')}
+function setSad(v){sad=v;document.body.classList.toggle('sad',v)}
+function flash(){const el=$('flash');el.classList.remove('active');void el.offsetWidth;el.classList.add('active')}
+let audioContext;
+function ding(){try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;audioContext??=new C();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});const t=audioContext.currentTime;[[784,0,.65],[988,.14,.8],[1175,.28,1.1]].forEach(([f,delay,duration])=>{const o=audioContext.createOscillator(),g=audioContext.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t+delay);g.gain.exponentialRampToValueAtTime(.12,t+delay+.02);g.gain.exponentialRampToValueAtTime(.0001,t+delay+duration);o.connect(g).connect(audioContext.destination);o.start(t+delay);o.stop(t+delay+duration+.02)})}catch(e){}}
+const palette=[265,280,300,315,175,45];
+function burst(x,y,power=1,inward=false){if(reduced)return;const count=Math.round((inward?100:90)*power);const base=palette[Math.floor(Math.random()*palette.length)];for(let i=0;i<count;i++){let a=Math.random()*Math.PI*2;let speed=(95+Math.random()*360)*power;if(inward){a=Math.atan2(H*.5-y,W*.5-x)+(Math.random()-.5)*1.55;speed=(190+Math.random()*480)*power}particles.push({x,y,px:x,py:y,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,life:1,max:.8+Math.random()*1.25,hue:base+(Math.random()-.5)*28,sz:1.2+Math.random()*2.7,shape:Math.random()<.25?'confetti':'spark',spin:Math.random()*6})}if(particles.length>4300)particles.splice(0,particles.length-4300)}
+function edgeBurst(){const side=Math.floor(Math.random()*4),x=side===0?0:side===1?W:Math.random()*W,y=side===2?0:side===3?H:Math.random()*H;burst(x,y,1.15,true)}
+let countdownShakeStart=0;
+function animateCountdownCard(now){
+ const shell=$('shell');
+ if(!finished && shell.classList.contains('countdown-shake')){
+   const remaining=Math.max(0,activeTarget-Date.now());
+   const progress=1-Math.min(1,remaining/60000);
+   const strength=0.15+15.95*Math.pow(progress,1.65);
+   const t=now*.001;
+   const x=(Math.sin(t*51)*.65+Math.sin(t*83)*.35)*strength;
+   const y=(Math.cos(t*57)*.65+Math.cos(t*91)*.35)*strength*.72;
+   const rot=Math.sin(t*47)*strength*.045;
+   shell.style.transform=`translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) rotate(${rot.toFixed(3)}deg)`;
+   // Pulse frequency accelerates continuously from ~1 cycle / 3.4 s to ~1 cycle / .42 s.
+   // Integrate frequency over the 60-second ramp so the phase never jumps.
+   const elapsed=60-remaining/1000;
+   const f0=1/3.4, f1=1/.42;
+   const phase=2*Math.PI*(f0*elapsed+(f1-f0)*elapsed*elapsed/120);
+   const pulse=.5+.5*Math.sin(phase-Math.PI/2);
+   const glowBase=38+95*Math.pow(progress,1.35);
+   const glow=glowBase*(.70+.75*pulse);
+   const alpha=Math.min(.99,.26+.35*progress+(.16+.19*progress)*pulse);
+   shell.style.boxShadow=`0 24px 100px #000b,0 0 ${glow.toFixed(2)}px rgba(174,84,255,${alpha.toFixed(3)}),0 0 ${(glow*.53).toFixed(2)}px rgba(234,164,255,${(.12+.45*pulse*progress).toFixed(3)}),inset 0 0 ${(22+55*progress+18*pulse).toFixed(2)}px #9a46ff44`;
+   shell.style.borderColor=`rgba(214,152,255,${Math.min(1,.48+.35*progress+.17*pulse).toFixed(3)})`;
+ }else if(!finished && shell.style.transform){shell.style.transform='';shell.style.boxShadow='';shell.style.borderColor=''}
+}
+const celebration=$('celebration');
+const celebrationColors=['#ba65ff','#e4b2ff','#ff5ecf','#ffffff','#8f63ff','#39ff88'];
+function celebrateBurst(x,y,count=95){
+ const fragment=document.createDocumentFragment();
+ for(let i=0;i<count;i++){
+   const el=document.createElement('i');el.className='firework-spark';
+   const angle=Math.random()*Math.PI*2,dist=130+Math.random()*Math.min(W,H)*.7;
+   const color=celebrationColors[Math.floor(Math.random()*celebrationColors.length)];
+   for(const [k,v] of Object.entries({'--x':x+'px','--y':y+'px','--dx':Math.cos(angle)*dist+'px','--dy':Math.sin(angle)*dist+'px','--size':(3+Math.random()*6)+'px','--color':color,'--duration':(1.35+Math.random()*1.1)+'s'}))el.style.setProperty(k,v);
+   el.addEventListener('animationend',()=>el.remove(),{once:true});fragment.appendChild(el);
+ }
+ celebration.appendChild(fragment);
+}
+function confettiWave(count=100){const frag=document.createDocumentFragment();for(let i=0;i<count;i++){
+ const el=document.createElement('i');el.className='party-confetti';const color=celebrationColors[Math.floor(Math.random()*celebrationColors.length)];
+ for(const [k,v] of Object.entries({'--x':Math.random()*100+'%','--w':(4+Math.random()*7)+'px','--h':(7+Math.random()*13)+'px','--color':color,'--drift':(Math.random()-.5)*240+'px','--spin':(Math.random()-.5)*1500+'deg','--duration':(3+Math.random()*4)+'s'}))el.style.setProperty(k,v);
+ el.addEventListener('animationend',()=>el.remove(),{once:true});frag.appendChild(el);
+ }celebration.appendChild(frag)}
+function heartWave(count=36){
+ const frag=document.createDocumentFragment(),shapes=['♥','❤','💗','💖','💕'];
+ for(let i=0;i<count;i++){
+  const el=document.createElement('span');el.className='falling-heart';
+  el.textContent=shapes[Math.floor(Math.random()*shapes.length)];
+  const twist=(-85+Math.random()*170),start=(-55+Math.random()*110);
+  for(const [k,v] of Object.entries({'--x':Math.random()*100+'%','--size':(13+Math.random()*31)+'px','--opacity':(.55+Math.random()*.45).toFixed(2),'--drift':(-180+Math.random()*360)+'px','--sway':(-45+Math.random()*90)+'px','--start-rot':start+'deg','--twist':twist+'deg','--duration':(5.5+Math.random()*6)+'s'}))el.style.setProperty(k,v);
+  el.style.animationDelay=(-Math.random()*1.2)+'s';
+  el.addEventListener('animationend',()=>el.remove(),{once:true});frag.appendChild(el);
+ }
+ celebration.appendChild(frag);
+}
+let celebrationTimer=null;
+function startCelebration(){
+ celebrateBurst(W*.5,H*.35,190);confettiWave(180);heartWave(70);
+ for(let i=0;i<5;i++)setTimeout(()=>celebrateBurst(W*(.1+Math.random()*.8),H*(.12+Math.random()*.6),135),i*220);
+ if(celebrationTimer)clearInterval(celebrationTimer);
+ celebrationTimer=setInterval(()=>{if(!party){clearInterval(celebrationTimer);return}celebrateBurst(W*(.12+Math.random()*.76),H*(.12+Math.random()*.65),115);confettiWave(25);heartWave(10)},650);
+}
+function render(now){const dt=Math.min(.04,(now-last)/1000||.016);last=now;animateCountdownCard(now);fx.clearRect(0,0,W,H);if(now<fireworkUntil&&!reduced&&now>=nextBurst){if(party){edgeBurst();edgeBurst()}else{burst(W*(.12+Math.random()*.76),H*(.12+Math.random()*.56),1.15)}nextBurst=now+(party?115:310)}for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt/p.max;if(p.life<=0){particles.splice(i,1);continue}p.px=p.x;p.py=p.y;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=(p.shape==='confetti'?180:100)*dt;p.vx*=Math.pow(.985,dt*60);const alpha=Math.min(1,p.life*1.5);fx.globalAlpha=alpha;fx.strokeStyle=`hsl(${p.hue} 100% 72%)`;fx.fillStyle=fx.strokeStyle;fx.shadowColor=fx.strokeStyle;fx.shadowBlur=16;if(p.shape==='confetti'){fx.save();fx.translate(p.x,p.y);fx.rotate(now*.002+p.spin);fx.fillRect(-p.sz*1.7,-p.sz*.7,p.sz*3.4,p.sz*1.4);fx.restore()}else{fx.lineWidth=Math.max(.7,p.sz*.75);fx.beginPath();fx.moveTo(p.px,p.py);fx.lineTo(p.x,p.y);fx.stroke();fx.beginPath();fx.arc(p.x,p.y,p.sz*.55,0,Math.PI*2);fx.fill()}}fx.globalAlpha=1;fx.shadowBlur=0;rx.clearRect(0,0,W,H);if(sad&&!reduced){for(const d of drops){d.y+=d.speed*dt;d.x-=d.speed*.15*dt;if(d.y>H+50){d.y=-50;d.x=Math.random()*W}if(d.x< -50)d.x=W+50;rx.globalAlpha=d.alpha;rx.strokeStyle='#f0f5ff';rx.shadowColor='#d8eaff';rx.shadowBlur=4;rx.lineWidth=d.width+0.4;rx.beginPath();rx.moveTo(d.x,d.y);rx.lineTo(d.x-d.len*.2,d.y+d.len);rx.stroke()}rx.globalAlpha=1;rx.shadowBlur=0;const grad=rx.createLinearGradient(0,0,0,H);grad.addColorStop(0,'#0a0b1212');grad.addColorStop(1,'#06070d08');rx.fillStyle=grad;rx.fillRect(0,0,W,H)}requestAnimationFrame(render)}requestAnimationFrame(render);
+function updateCountdown(){if(finished)return;const now=Date.now(),remain=Math.max(0,activeTarget-now);if(remain<=0){finished=true;$('shell').classList.remove('countdown-shake');$('shell').style.transform='';$('shell').style.boxShadow='';$('shell').style.borderColor='';show('questionScreen');ding();flash();fireworkUntil=performance.now()+11000;nextBurst=0;burst(W*.5,H*.35,1.8);return}const secs=Math.ceil(remain/1000);$('days').textContent=String(Math.floor(secs/86400)).padStart(2,'0');$('hours').textContent=String(Math.floor(secs%86400/3600)).padStart(2,'0');$('minutes').textContent=String(Math.floor(secs%3600/60)).padStart(2,'0');$('seconds').textContent=String(secs%60).padStart(2,'0');const pct=Math.max(0,Math.min(100,(now-activeStart)/(activeTarget-activeStart)*100));$('progress').style.width=pct+'%';$('percent').textContent=pct.toFixed(2)+'%';$('progressTrack').setAttribute('aria-valuenow',pct.toFixed(2));const label=$('progressText'),countdown=$('shell');if(remain<=60000){countdown.classList.add('countdown-shake');label.textContent=remain<10000?'IT IS ALMOST TIME! ♥':'HEART RACING...'}else{countdown.classList.remove('countdown-shake');label.textContent=remain<3600000?'The final hour. This is really happening.':remain<86400000?'Less than one day left...':'The anticipation is building...'}}
+updateCountdown();setInterval(updateCountdown,100);
+$('yesBtn').addEventListener('click',()=>{party=true;setSad(false);$('song2').pause();document.body.classList.add('party');show('successScreen');flash();ding();fireworkUntil=Infinity;nextBurst=0;for(let i=0;i<8;i++)edgeBurst();startCelebration();const audio=$('song');audio.volume=.8;audio.play().catch(()=>{})});
+$('maybeBtn').addEventListener('click',()=>{if(maybeDisabled)return;maybeDisabled=true;$('maybeBubble').classList.remove('hidden');$('maybeBtn').disabled=true;setTimeout(()=>$('maybeBubble').classList.add('hidden'),3000)});
+$('noBtn').addEventListener('click',()=>{setSad(true);show('sureScreen');const a=$('song2');a.currentTime=0;a.volume=.8;a.play().catch(()=>{})});
+$('sureNo').addEventListener('click',()=>{setSad(false);$('song2').pause();$('song2').currentTime=0;show('questionScreen')});
+$('sureYes').addEventListener('click',()=>{show('formScreen');stage=0;formFinished=false;$('reasons').value='';$('formError').classList.add('hidden');$('returnBtn').classList.add('hidden');updateForm()});
+function updateForm(){const n=$('reasons').value.length,need=requirements[stage],valid=n>=need;$('countLabel').textContent=n.toLocaleString()+' / '+need.toLocaleString()+' characters';$('formHint').textContent=valid?'Minimum reached ✓':(need-n).toLocaleString()+' more required';$('formHint').classList.toggle('bad',!valid);$('reasons').classList.toggle('invalid',!valid);$('submitBtn').disabled=!valid||formFinished;$('submitBtn').classList.toggle('locked',!valid||formFinished);$('submitBtn').textContent=formFinished?'Submission failed':'Submit explanation'}
+$('reasons').addEventListener('input',updateForm);
+function openModal(final){
+ $('modalTitle').textContent=final?'ERROR 212':'More details required';
+ $('modalMessage').innerHTML=final?'The system refuses to believe Jordan is a bad match. Your explanation could not be submitted.':'Oops! Your explanation needs to be more thorough. The minimum is now <strong class="required-count">'+requirements[stage].toLocaleString()+'</strong> characters.';
+ $('modalReturn').textContent=final?'Go back to the start':'Okay';
+ $('finalModal').classList.remove('hidden');
+ $('modalReturn').focus();
+}
+$('submitBtn').addEventListener('click',()=>{
+ if(formFinished||$('reasons').value.length<requirements[stage])return;
+ if(stage<requirements.length-1){stage++;updateForm();openModal(false)}
+ else{formFinished=true;updateForm();openModal(true)}
+});
+$('modalReturn').addEventListener('click',()=>{
+ $('finalModal').classList.add('hidden');
+ if(!formFinished){$('reasons').focus();return}
+ setSad(false);$('song2').pause();$('song2').currentTime=0;show('questionScreen');$('questionScreen').classList.add('return-mode');$('yesBtn').classList.add('big-yes');
+ for(const id of ['maybeBtn','noBtn']){$(id).disabled=true;$(id).classList.add('small-btn')}
+ $('maybeBubble').classList.add('hidden');
+});
+})();
+</script>
+</body>
+</html>
